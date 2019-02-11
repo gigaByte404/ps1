@@ -5,6 +5,7 @@ package twitter;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,11 +27,14 @@ class Extract {
      *         every tweet in the list.
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-    	
-    	
-    	
-        throw new RuntimeException("not implemented");
-    }
+   	 Collections.sort(tweets, new Comparator<Tweet>(){
+            public int compare(Tweet s1, Tweet s2) {
+              return s1.getTimestamp().compareTo(s2.getTimestamp());
+           }
+   	 });
+
+       return new Timespan( tweets.get(0).getTimestamp(),tweets.get(tweets.size()-1).getTimestamp());
+   }
 
     /**
      * Get usernames mentioned in a list of tweets.
@@ -48,13 +52,20 @@ class Extract {
      *         include a username at most once.
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-    	
-    	
-    	Collections.sort(tweets, new Comparator<Tweet>()
-    			);
-    	
-        throw new RuntimeException("not implemented");
-    }
-
+        Set<String> s = new HashSet<String>();
+        for(int i = 0;i<tweets.size();i++) {
+        	for(String word: tweets.get(i).getText().split(" ")) {
+        		if(word.charAt(0)=='@') {
+        			word = word.substring(1);
+        			s.add(word);
+        		}
+        	}
+        }
+        return s;
+    }    
+    
 }
+
+
+
  
