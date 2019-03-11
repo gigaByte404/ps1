@@ -22,6 +22,7 @@ public class Main {
      * within the last hour. This server may take up to a minute to respond, if
      * it has to refresh its cached sample of tweets.
      */
+	
     public static final URL SAMPLE_SERVER = makeURLAssertWellFormatted("http://courses.csail.mit.edu/6.005/ps1_tweets/tweetPoll.py");
     
     private static URL makeURLAssertWellFormatted(String urlString) {
@@ -31,6 +32,7 @@ public class Main {
             throw new AssertionError(murle);
         }
     }
+    
     
     /**
      * Main method of the program. Fetches a sample of tweets and prints some

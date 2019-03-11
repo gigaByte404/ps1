@@ -36,6 +36,7 @@ class Extract {
        return new Timespan( tweets.get(0).getTimestamp(),tweets.get(tweets.size()-1).getTimestamp());
    }
 
+    
     /**
      * Get usernames mentioned in a list of tweets.
      * 
@@ -65,6 +66,7 @@ class Extract {
     }    
     
 }
+
 
 
 

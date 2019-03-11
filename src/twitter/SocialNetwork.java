@@ -3,6 +3,11 @@
  */
 package twitter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,10 +45,49 @@ public class SocialNetwork {
      *         All the Twitter usernames in the returned social network must be
      *         either authors or @-mentions in the list of tweets.
      */
-    public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+	public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
+    	Map<String, Set<String>> map = new HashMap<String, Set<String>>();
+        for(int i = 0; i<tweets.size();i++) {
+        	
+        	Set<String> username = new HashSet<String>();
+        	Set<String> keys = map.keySet();
+        	Set<String> insertedUsers = new HashSet<String>();
+        	String doubleauthor = "";
+        	String author = tweets.get(i).getAuthor();
+        	for(String key: keys){
+        	    if(key == author) {
+        	    	insertedUsers = map.get(key);
+        	    	doubleauthor = key;
+        	    }
+        	}
+        	
+        	String text = tweets.get(i).getText().toLowerCase();
+        	String[] words = text.split(" ");
+        	if(doubleauthor == author) {
+	    		for (int word_array_index = 0; word_array_index < words.length; word_array_index++ ) {
+	    			String name = words[word_array_index];
+	    			if (name.indexOf("@") == 0) {
+	    				insertedUsers.add(name);
+	    				
+	    			}
+	    			
+	    		}	
+	    		map.put(doubleauthor, insertedUsers);
+        	}
+        	else {
+        		for (int word_array_index = 0; word_array_index < words.length; word_array_index++ ) {
+        			String name = words[word_array_index];
+        			if (name.indexOf("@") == 0) {
+        				username.add(name);
+        				
+        			}
+        		}	
+        		map.put(author, username);
+        	}
+        }
+        return map;
+     
     }
-
     /**
      * Find the people in a social network who have the greatest influence, in
      * the sense that they have the most followers.
@@ -54,7 +98,30 @@ public class SocialNetwork {
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
+    	List<String> followersInDescendingOrder = new ArrayList();
+    	Map<String, Integer> duplicateMapWithFollowersCount = new HashMap<String, Integer>();
+    	Set<String> keys = followsGraph.keySet();
+    	int followersCount;
+    	for(String key: keys) {
+    		followersCount = followsGraph.get(key).size();
+    		duplicateMapWithFollowersCount.put(key, followersCount);
+    		
+    	}
+    	
+    	Map<String, Integer> reverseSortedMap = new HashMap<String, Integer>();
+    	
+    	duplicateMapWithFollowersCount.entrySet()
+    		    .stream()
+    		    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+    		    .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+
+    	Set<String> newMapKeys = reverseSortedMap.keySet();
+    	for(String key: newMapKeys) {
+    		followersInDescendingOrder.add(key);
+    	}
+    	return followersInDescendingOrder;
     }
+	
+
 
 }
